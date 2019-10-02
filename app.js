@@ -1,21 +1,27 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-
+const apps = require('./data.js');
 const app = express();
 
 app.use(morgan('common'));
 
-const apps = require('./data.js');
-
-
 app.get('/apps', (req, res) => {
     const { search = "", sort, genres } = req.query;
     if (sort) {
-        if (!['rating', 'app'].includes(sort)) {
+        if (!['Rating', 'App'].includes(sort)) {
             return res
                 .status(400)
-                .send('Sort must be one of rating or app');
+                .send('Sort must be one of Rating or App');
+        } else {
+            return res
+                .status(200).send('Will be sorting this soon');
+        }
+        else {let results = apps
+            .sort(app =>
+                app
+                    .Rating
+                    .includes(sort.toLowerCase()));
         }
     }
     if (genres) {
@@ -23,19 +29,34 @@ app.get('/apps', (req, res) => {
             return res
                 .status(400)
                 .send('Genre must be one of the following: Action, Puzzle, Strategy, Casual, Arcade, Card');
+        } else {
+            return res
+                .status(200)
+                .send('Will be filtering by genre soon');
         }
     }
 
-    if (res === (search, sort, genres)) {
-        return res;
+    //if (res === (search, sort, genres)) {
+    //    return res;
+    //}
+    if (search) {
+        let results = apps
+            .filter(app =>
+                app
+                    .App
+                    .includes(search.toLowerCase()));
+
+        res
+            .status(200)
+            .json(results);
     }
 
-    let results = apps
-        .filter(app =>
-            app);
+    res.status(200).json(apps);
 
-  res
-    .json(results);
+    app.get("*", (req, res) => {
+        res.status(404).end();
+    });
+
 });
 
 app.listen(8000, () => {
