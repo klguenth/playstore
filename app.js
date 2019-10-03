@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const cors = require('cors');
+//const cors = require('cors');
 const apps = require('./data.js');
 const app = express();
 
@@ -17,12 +17,6 @@ app.get('/apps', (req, res) => {
             return res
                 .status(200).send('Will be sorting this soon');
         }
-        else {let results = apps
-            .sort(app =>
-                app
-                    .Rating
-                    .includes(sort.toLowerCase()));
-        }
     }
     if (genres) {
         if (!['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'].includes(genres)) {
@@ -36,9 +30,6 @@ app.get('/apps', (req, res) => {
         }
     }
 
-    //if (res === (search, sort, genres)) {
-    //    return res;
-    //}
     if (search) {
         let results = apps
             .filter(app =>
